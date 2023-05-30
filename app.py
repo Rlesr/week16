@@ -1,12 +1,12 @@
-import os
-from os.path import join, dirname
-from dotenv import load_dotenv
 from flask import Flask, render_template, request, jsonify
 import requests
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
 
-dotenv_path = join(dirname(__file__), '.env')
+dotenv_path = join(dirname(__file__),'.env')
 load_dotenv(dotenv_path)
 
 MONGODB_URI = os.environ.get("MONGODB_URI")
@@ -23,6 +23,7 @@ def home():
 
 @app.route("/movie", methods=["POST"])
 def movie_post():
+    # sample_receive = request.form['sample_give']
     url_receive = request.form['url_give']
     star_receive = request.form['star_give']
     comment_receive = request.form['comment_give']
@@ -31,6 +32,8 @@ def movie_post():
     data = requests.get(url_receive, headers=headers)
 
     soup = BeautifulSoup(data.text, 'html.parser')
+
+    # From here on, we will write the code for extracting data from meta tags
 
     og_image = soup.select_one('meta[property="og:image"]')
     og_title = soup.select_one('meta[property="og:title"]')
